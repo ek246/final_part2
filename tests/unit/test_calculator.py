@@ -3,6 +3,7 @@
 import pytest  # Import the pytest framework for writing and running tests
 from typing import Union  # Import Union for type hinting multiple possible types
 from app.operations import add, subtract, multiply, divide  # Import the calculator functions from the operations module
+from app.models.calculator import CalculatorFactory, Calculator
 
 # Define a type alias for numbers that can be either int or float
 Number = Union[int, float]
@@ -232,3 +233,35 @@ def test_divide_by_zero() -> None:
     # Assert that the exception message contains the expected error message
     assert "Cannot divide by zero!" in str(excinfo.value), \
         f"Expected error message 'Cannot divide by zero!', but got '{excinfo.value}'"
+@pytest.mark.parametrize("type, a, b, expected", [
+    ("add", 2, 3, 5),
+    ("subtract", 5, 2, 3),
+    ("multiply", 2, 3, 6),
+    ("divide", 6, 3, 2),
+])
+def test_factory_creates_calculation(type, a, b, expected):
+    calculator = CalculatorFactory.create(user_id=1, type=type, a=a, b=b)
+    assert isinstance(calculator, Calculator)
+    assert calculator.user_id == 1
+    assert calculator.type == type
+    assert calculator.a == a
+    assert calculator.b == b
+    assert calculator.result == expected
+
+def test_factory_raises_on_divide_by_zero():
+    with pytest.raises(ValueError) as excinfo:
+        CalculatorFactory.create(user_id=1, type="divide", a=6, b=0)
+    assert "Cannot divide by zero!" in str(excinfo.value), \
+        f"Expected error message 'Cannot divide by zero!', but got '{excinfo.value}'"
+def test_factory_raises_on_unsupported_type():
+    with pytest.raises(ValueError) as excinfo:
+        CalculatorFactory.create(user_id=1, type="unsupported", a=6, b=3)
+    assert f"Unsupported type: unsupported" in str(excinfo.value), \
+        f"Expected error message 'Unsupported type: unsupported', but got '{excinfo.value}'"
+def test_calculator_repr():
+    calculator = Calculator(id=1, user_id=2, type="add", a=2, b=3, result=5)
+    assert repr(calculator) == (
+        "<Calculator(id=1, user_id=2, a=2, b=3, "
+        "type=add, result=5)>"
+    )
+

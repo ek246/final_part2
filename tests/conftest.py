@@ -9,6 +9,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+
 @pytest.fixture
 def db_session():
     database_url = os.environ["TEST_DATABASE_URL"]
@@ -21,6 +22,8 @@ def db_session():
     engine = create_engine(database_url)
 
     try:
+        from app.models.users import Users
+        from app.models.calculator import Calculator
         Base.metadata.create_all(engine)
 
         with engine.connect() as connection:
