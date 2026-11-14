@@ -2,6 +2,7 @@ from sqlalchemy import Integer
 from datetime import datetime
 from passlib.context import CryptContext
 from app.database import Base
+from sqlalchemy.orm import relationship
 
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.dialects.postgresql import UUID
@@ -17,6 +18,8 @@ class Users(Base):
     email = Column(String(255), unique=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     password_hash = Column(String(255), nullable=False)
+
+    calculator = relationship("Calculator", back_populates="user")
 
     @staticmethod
     def hash_password(password: str) -> str:
