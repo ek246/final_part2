@@ -30,7 +30,7 @@ def test_calculation_read_valid():
         "b": 10,
         "type": "add",
         "result": 15,
-        "created_at": datetime.now()
+        
     }
     calc_read = CalculationRead(**data)
     assert calc_read.id == 1
@@ -38,7 +38,7 @@ def test_calculation_read_valid():
     assert calc_read.b == 10
     assert calc_read.type == "add"
     assert calc_read.result == 15
-    assert isinstance(calc_read.created_at, datetime)
+    
 
 def test_calculation_read_invalid():
     data = {
@@ -47,7 +47,7 @@ def test_calculation_read_invalid():
         "b": 10,
         "type": "add",
         "result": 15,
-        "created_at": datetime.now()
+        
     }
     with pytest.raises(ValidationError):
         CalculationRead(**data)
@@ -67,7 +67,7 @@ def test_calculation_read_divide_by_zero():
         "b": 0,
         "type": "divide",
         "result": 0,
-        "created_at": datetime.now()
+        
     }
     with pytest.raises(ValueError):
         CalculationRead(**data)

@@ -20,7 +20,7 @@ class CalculationRead(BaseModel):
    b: float
    type: Literal["add", "subtract", "multiply", "divide"]
    result: float
-   created_at: datetime
+   
 
    @model_validator(mode="after")
    def check_divide_by_zero(self):
